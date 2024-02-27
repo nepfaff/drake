@@ -75,6 +75,16 @@ drake_cc_library(
 )
 
 drake_cc_library(
+    name = "joint_friction_compensation",
+    srcs = ["joint_friction_compensation.cc"],
+    hdrs = ["joint_friction_compensation.h"],
+    deps = [
+        "//multibody/plant",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
     name = "inverse_dynamics_controller",
     srcs = ["inverse_dynamics_controller.cc"],
     hdrs = ["inverse_dynamics_controller.h"],
