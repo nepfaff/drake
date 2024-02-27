@@ -16,6 +16,7 @@ drake_cc_package_library(
         ":finite_horizon_linear_quadratic_regulator",
         ":inverse_dynamics",
         ":inverse_dynamics_controller",
+        ":joint_friction_compensation",
         ":joint_stiffness_controller",
         ":linear_model_predictive_controller",
         ":linear_quadratic_regulator",
@@ -68,6 +69,16 @@ drake_cc_library(
     name = "inverse_dynamics",
     srcs = ["inverse_dynamics.cc"],
     hdrs = ["inverse_dynamics.h"],
+    deps = [
+        "//multibody/plant",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
+    name = "joint_friction_compensation",
+    srcs = ["joint_friction_compensation.cc"],
+    hdrs = ["joint_friction_compensation.h"],
     deps = [
         "//multibody/plant",
         "//systems/framework",

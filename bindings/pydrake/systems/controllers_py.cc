@@ -8,6 +8,7 @@
 #include "drake/systems/controllers/finite_horizon_linear_quadratic_regulator.h"
 #include "drake/systems/controllers/inverse_dynamics.h"
 #include "drake/systems/controllers/inverse_dynamics_controller.h"
+#include "drake/systems/controllers/joint_friction_compensation.h"
 #include "drake/systems/controllers/joint_stiffness_controller.h"
 #include "drake/systems/controllers/linear_quadratic_regulator.h"
 #include "drake/systems/controllers/pid_controlled_system.h"
@@ -106,6 +107,23 @@ PYBIND11_MODULE(controllers, m) {
             &Class::get_output_port_generalized_force,
             py_rvp::reference_internal,
             cls_doc.get_output_port_generalized_force.doc);
+  }
+
+  {
+    using Class = JointFrictionCompensation<double>;
+    constexpr auto& cls_doc = doc.JointFrictionCompensation;
+    py::class_<Class, LeafSystem<double>>(
+        m, "JointFrictionCompensation", cls_doc.doc)
+        .def(py::init<const Eigen::Ref<const Eigen::VectorXd>&,
+                 const Eigen::Ref<const Eigen::VectorXd>&, double>(),
+            py::arg("fc"), py::arg("fv"), py::arg("v0"), cls_doc.ctor.doc)
+        .def("get_input_port_estimated_state",
+            &Class::get_input_port_estimated_state, py_rvp::reference_internal,
+            cls_doc.get_input_port_estimated_state.doc)
+        .def("get_input_port_torque", &Class::get_input_port_torque,
+            py_rvp::reference_internal, cls_doc.get_input_port_torque.doc)
+        .def("get_output_port_force", &Class::get_output_port_force,
+            py_rvp::reference_internal, cls_doc.get_output_port_force.doc);
   }
 
   // TODO(eric.cousineau): Expose multiple inheritance from
