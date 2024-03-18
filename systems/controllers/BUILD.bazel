@@ -85,6 +85,66 @@ drake_cc_library(
 )
 
 drake_cc_library(
+    name = "posture_task",
+    srcs = ["posture_task.cc"],
+    hdrs = ["posture_task.h"],
+    deps = [
+        "//multibody/plant",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
+    name = "decomposition_inverse",
+    srcs = ["decomposition_inverse.cc"],
+    hdrs = ["decomposition_inverse.h"],
+    deps = [
+        "//multibody/plant",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
+    name = "scoped_names",
+    srcs = ["scoped_names.cc"],
+    hdrs = ["scoped_names.h"],
+    deps = [
+        "//multibody/parsing",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
+    name = "taskspace_dynamics",
+    srcs = ["taskspace_dynamics.cc"],
+    hdrs = ["taskspace_dynamics.h"],
+    deps = [
+        ":scoped_names",
+        ":decomposition_inverse",
+        "//multibody/parsing",
+        "//systems/framework",
+    ],
+)
+
+drake_cc_library(
+    name = "joint_posture_controller",
+    srcs = ["joint_posture_controller.cc"],
+    hdrs = ["joint_posture_controller.h"],
+    deps = [
+        ":posture_task",
+        ":taskspace_dynamics",
+        "//multibody/plant",
+        "//systems/controllers:state_feedback_controller_interface",
+        "//systems/framework",
+        "//systems/primitives:adder",
+        "//systems/primitives:constant_value_source",
+        "//systems/primitives:constant_vector_source",
+        "//systems/primitives:pass_through",
+        "//systems/primitives:shared_pointer_system",
+    ],
+)
+
+drake_cc_library(
     name = "inverse_dynamics_controller",
     srcs = ["inverse_dynamics_controller.cc"],
     hdrs = ["inverse_dynamics_controller.h"],
