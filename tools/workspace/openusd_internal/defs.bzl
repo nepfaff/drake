@@ -2,7 +2,6 @@ load("@drake//tools/skylark:cc.bzl", "cc_library")
 load("@drake//tools/workspace/openusd_internal:lock/files.bzl", "FILES")
 
 def pxr_library(
-        name,
         *,
         subdir):
     """Defines a cc_library in the spirit of OpenUSD's pxr_library CMake macro.
@@ -11,10 +10,10 @@ def pxr_library(
     Instead, they are loaded from the `lock/files.bzl` database.
 
     Args:
-        name: Matches the upstream name (the first argument in CMake).
-        subdir: The subdirectory under `OpenUSD/pxr` (e.g. "base/arch").
+        subdir: The subdirectory under `OpenUSD` (e.g. "pxr/base/arch").
     """
     attrs = FILES[subdir]
+    name = attrs["NAME"]
     srcs = [
         subdir + "/" + x + ".cpp"
         for x in attrs["PUBLIC_CLASSES"] + attrs["PRIVATE_CLASSES"]
@@ -56,11 +55,22 @@ def pxr_library(
         "@boost_internal//:vmd",
         "@onetbb_internal//:tbb",
     ]
+
+    # TODO(jwnimmer-tri) The plugInfo files will need to be pseudo-installed.
+    data = native.glob([subdir + "/plugInfo.json"], allow_empty = True)
+
+    # OpenUSD uses `__attribute__((constructor))` in anger, so we must mark
+    # all of its code as "alwayslink" (aka "whole archive").
+    alwayslink = True
+
     cc_library(
         name = name,
         srcs = srcs,
         hdrs = hdrs,
         defines = defines,
         copts = ["-w"],
+        alwayslink = alwayslink,
+        linkstatic = True,
+        data = data,
         deps = deps,
     )
