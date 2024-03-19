@@ -116,11 +116,14 @@ PYBIND11_MODULE(controllers, m) {
     py::class_<Class, Diagram<double>>(
         m, "InverseDynamicsController", cls_doc.doc)
         .def(py::init<const MultibodyPlant<double>&, const VectorX<double>&,
-                 const VectorX<double>&, const VectorX<double>&, bool>(),
+                 const VectorX<double>&, const VectorX<double>&, bool,
+                 systems::Context<double>*>(),
             py::arg("robot"), py::arg("kp"), py::arg("ki"), py::arg("kd"),
-            py::arg("has_reference_acceleration"),
+            py::arg("has_reference_acceleration"), py::arg("plant_context") = nullptr,
             // Keep alive, reference: `self` keeps `robot` alive.
-            py::keep_alive<1, 2>(), cls_doc.ctor.doc)
+            py::keep_alive<1, 2>(),
+            // Keep alive, reference: `self` keeps `plant_context` alive.
+            py::keep_alive<1, 7>(), cls_doc.ctor.doc)
         .def("set_integral_value", &Class::set_integral_value,
             cls_doc.set_integral_value.doc)
         .def("get_input_port_desired_acceleration",

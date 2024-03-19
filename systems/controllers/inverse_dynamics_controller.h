@@ -95,7 +95,8 @@ class InverseDynamicsController final
       const VectorX<double>& kp,
       const VectorX<double>& ki,
       const VectorX<double>& kd,
-      bool has_reference_acceleration);
+      bool has_reference_acceleration,
+      Context<T>* plant_context = nullptr);
 
   /**
    * Constructs an inverse dynamics controller and takes the ownership of the
@@ -162,7 +163,7 @@ class InverseDynamicsController final
  private:
   void SetUp(std::unique_ptr<multibody::MultibodyPlant<T>> owned_plant,
              const VectorX<double>& kp, const VectorX<double>& ki,
-             const VectorX<double>& kd);
+             const VectorX<double>& kd, Context<T>* plant_context);
 
   const multibody::MultibodyPlant<T>* multibody_plant_for_control_{nullptr};
   PidController<T>* pid_{nullptr};

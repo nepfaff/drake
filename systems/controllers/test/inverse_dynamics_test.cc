@@ -30,11 +30,12 @@ namespace {
 class InverseDynamicsTest : public ::testing::Test {
  protected:
   void Init(std::unique_ptr<MultibodyPlant<double>> plant,
-            const InverseDynamics<double>::InverseDynamicsMode mode) {
+            const InverseDynamics<double>::InverseDynamicsMode mode,
+            Context<double>* plant_context = nullptr) {
     multibody_plant_ = std::move(plant);
     multibody_context_ = multibody_plant_->CreateDefaultContext();
     inverse_dynamics_ = make_unique<InverseDynamics<double>>(
-        multibody_plant_.get(), mode);
+        multibody_plant_.get(), mode, plant_context);
     FinishInit(mode);
   }
 
