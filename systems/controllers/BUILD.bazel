@@ -16,6 +16,7 @@ drake_cc_package_library(
         ":finite_horizon_linear_quadratic_regulator",
         ":inverse_dynamics",
         ":inverse_dynamics_controller",
+        ":joint_posture_controller",
         ":joint_stiffness_controller",
         ":linear_model_predictive_controller",
         ":linear_quadratic_regulator",

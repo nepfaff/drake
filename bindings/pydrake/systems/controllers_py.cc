@@ -8,6 +8,7 @@
 #include "drake/systems/controllers/finite_horizon_linear_quadratic_regulator.h"
 #include "drake/systems/controllers/inverse_dynamics.h"
 #include "drake/systems/controllers/inverse_dynamics_controller.h"
+#include "drake/systems/controllers/joint_posture_controller.h"
 #include "drake/systems/controllers/joint_stiffness_controller.h"
 #include "drake/systems/controllers/linear_quadratic_regulator.h"
 #include "drake/systems/controllers/pid_controlled_system.h"
@@ -140,6 +141,54 @@ PYBIND11_MODULE(controllers, m) {
             &Class::get_multibody_plant_for_control, py_rvp::reference_internal,
             cls_doc.get_multibody_plant_for_control.doc);
   }
+
+    {
+    using Class = JointPostureController<double>;
+    py::class_<Class, Diagram<double>>(m, "JointPostureController")
+        .def(py::init<const MultibodyPlant<double>&, const VectorX<double>&,
+                 const VectorX<double>&>(),
+            py::arg("plant"), py::arg("kp"), py::arg("kd"),
+            // Keep alive, reference: `self` keeps `plant` alive.
+            py::keep_alive<1, 2>())
+        .def("get_input_port_desired_state",
+            &Class::get_input_port_desired_state, py_rvp::reference_internal)
+        .def("get_input_port_estimated_state",
+            &Class::get_input_port_estimated_state, py_rvp::reference_internal)
+        .def("get_input_port_desired_acceleration",
+            &Class::get_input_port_desired_acceleration,
+            py_rvp::reference_internal)
+        .def("get_output_port_control", &Class::get_output_port_control,
+            py_rvp::reference_internal)
+        .def("get_multibody_plant_for_control",
+            &Class::get_multibody_plant_for_control, py_rvp::reference_internal);
+  }
+
+    // TODO: This doesn't work for some reason...
+//   {
+//     using Class = JointPostureController<double>;
+//     constexpr auto& cls_doc = doc.JointPostureController;
+//     py::class_<Class, Diagram<double>>(m, "JointPostureController", cls_doc.doc)
+//         .def(py::init<const MultibodyPlant<double>&, const VectorX<double>&,
+//                  const VectorX<double>&>(),
+//             py::arg("plant"), py::arg("kp"), py::arg("kd"),
+//             // Keep alive, reference: `self` keeps `plant` alive.
+//             py::keep_alive<1, 2>(), cls_doc.ctor.doc)
+//         .def("get_input_port_desired_state",
+//             &Class::get_input_port_desired_state, py_rvp::reference_internal,
+//             cls_doc.get_input_port_desired_state.doc)
+//         .def("get_input_port_estimated_state",
+//             &Class::get_input_port_estimated_state, py_rvp::reference_internal,
+//             cls_doc.get_input_port_estimated_state.doc)
+//         .def("get_input_port_desired_acceleration",
+//             &Class::get_input_port_desired_acceleration,
+//             py_rvp::reference_internal,
+//             cls_doc.get_input_port_desired_acceleration.doc)
+//         .def("get_output_port_control", &Class::get_output_port_control,
+//             py_rvp::reference_internal, cls_doc.get_output_port_control.doc)
+//         .def("get_multibody_plant_for_control",
+//             &Class::get_multibody_plant_for_control, py_rvp::reference_internal,
+//             cls_doc.get_multibody_plant_for_control.doc);
+//   }
 
   {
     using Class = JointStiffnessController<double>;
