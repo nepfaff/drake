@@ -155,6 +155,7 @@ class InverseDynamics final : public LeafSystem<T> {
   const InverseDynamicsMode mode_;
 
   Context<T>* plant_context_;
+  std::unique_ptr<Context<T>> owned_plant_context_;
 
   InputPortIndex estimated_state_;
   InputPortIndex desired_acceleration_;

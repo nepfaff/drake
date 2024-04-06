@@ -30,7 +30,8 @@ InverseDynamics<T>::InverseDynamics(
   DRAKE_THROW_UNLESS(plant_->is_finalized());
 
   if (plant_context_ == nullptr) {
-    plant_context_ = plant_->CreateDefaultContext().get();
+    owned_plant_context_ = plant_->CreateDefaultContext();
+    plant_context_ = owned_plant_context_.get();
   }
 
   estimated_state_ =
